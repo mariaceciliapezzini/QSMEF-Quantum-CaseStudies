@@ -16,4 +16,5 @@ Implementation of the Quantum Phase Estimation stage employed in Shor's algorith
 
 This repository accompanies the paper:
 
-"SMEF: A Framework for Component-Level Evaluation of Quantum Implementations Using Hermitian Observables and Shapley Values"
+SMEF: "Un marco metodológico para el análisis
+funcional de implementaciones cuánticas"
