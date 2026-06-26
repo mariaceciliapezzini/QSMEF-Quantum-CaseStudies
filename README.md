@@ -1,5 +1,5 @@
-# SMEF Software Engineering Module Evaluation Framework#
-
+# SMEF
+SMEF (Software Engineering Module Evaluation Framework) es un marco metodológico para el análisis funcional de implementaciones cuánticas.
 Repositorio que contiene las implementaciones experimentales utilizadas para evaluar SMEF (*Software Engineering Module Evaluation Framework*).
 
 Las implementaciones no tienen como objetivo reproducir de manera completa los algoritmos estudiados ni su ejecución sobre hardware cuántico. Su propósito es proporcionar modelos funcionales reproducibles que permitan aplicar SMEF y analizar la contribución de componentes internos mediante observables hermitianos y valores de Shapley.
