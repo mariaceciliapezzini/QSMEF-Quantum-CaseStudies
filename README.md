@@ -19,7 +19,7 @@ La implementación representa explícitamente los operadores funcionales utiliza
 * Moneda de Grover
 * Desplazamiento flip-flop
 
-### QPE/Shor
+### QPE
 
 Modelo funcional basado en la etapa de Estimación de Fase Cuántica (QPE)
 utilizada en el algoritmo de Shor.
