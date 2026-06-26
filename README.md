@@ -1,20 +1,46 @@
-# SMEF: Software Module Evaluation Framework
+# SMEF – Software Engineering Module Evaluation Framework
 
-This repository contains the reference implementations and experimental artifacts used to evaluate SMEF.
+Repositorio que contiene las implementaciones experimentales utilizadas para evaluar SMEF (*Software Engineering Module Evaluation Framework*).
 
-## Case Studies
+Las implementaciones no tienen como objetivo reproducir de manera completa los algoritmos estudiados ni su ejecución sobre hardware cuántico. Su propósito es proporcionar modelos funcionales reproducibles que permitan aplicar SMEF y analizar la contribución de componentes internos mediante observables hermitianos y valores de Shapley.
 
-### SKW Search
+## Estudios de caso
 
-Implementation of the Shenvi–Kempe–Whaley quantum walk search algorithm on hypercubes.
+### SKW
 
-### Quantum Phase Estimation (QPE)
+Modelo funcional basado en el algoritmo de búsqueda cuántica sobre hipercubos de Shenvi, Kempe y Whaley.
 
-Implementation of the Quantum Phase Estimation stage employed in Shor's algorithm.
+La implementación representa explícitamente los operadores funcionales utilizados por SMEF:
 
-## Related Publication
+* Oráculo
+* Moneda de Grover
+* Desplazamiento flip-flop
 
-This repository accompanies the paper:
+### QPE/Shor
 
-SMEF: "Un marco metodológico para el análisis
-funcional de implementaciones cuánticas"
+Modelo funcional basado en la etapa de Estimación de Fase Cuántica (QPE)
+utilizada en el algoritmo de Shor.
+
+Los componentes funcionales considerados por SMEF son:
+
+- B0: preparación inicial.
+- B1: generación de superposición mediante compuertas Hadamard.
+- B2,k: aplicaciones controladas del operador U^(2^k).
+
+La QFT inversa y la medición se utilizan como mecanismo de lectura
+de resultados y no se incluyen dentro de los componentes atribuibles
+analizados mediante valores de Shapley.
+
+## Objetivo
+
+El objetivo de estas implementaciones es servir como casos de estudio para evaluar SMEF, permitiendo:
+
+* construir configuraciones parciales;
+* calcular funciones características;
+* obtener valores de Shapley;
+* analizar el impacto funcional de anomalías introducidas en los componentes.
+
+## Publicación asociada
+
+SMEF: Un marco metodológico para el análisis funcional de implementaciones cuánticas.
+
