@@ -1,4 +1,4 @@
-# SMEF #
+# SMEF Software Engineering Module Evaluation Framework#
 
 Repositorio que contiene las implementaciones experimentales utilizadas para evaluar SMEF (*Software Engineering Module Evaluation Framework*).
 
