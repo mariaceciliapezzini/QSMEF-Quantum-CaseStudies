@@ -1,49 +1,44 @@
 # SMEF
 
-SMEF (*Software Engineering Module Evaluation Framework*) es un marco metodológico para el análisis funcional de implementaciones cuánticas.
+SMEF (*Software Engineering Module Evaluation Framework*) is a methodological framework for the functional analysis of quantum software implementations.
 
-Este repositorio contiene las implementaciones experimentales utilizadas para evaluar SMEF mediante estudios de caso basados en SKW y QPE/Shor.
+This repository contains the experimental implementations used to evaluate SMEF through case studies based on the Shenvi–Kempe–Whaley (SKW) quantum search algorithm and the Quantum Phase Estimation (QPE) subroutine of Shor's algorithm.
 
-Las implementaciones fueron desarrolladas con fines de evaluación metodológica. Cada caso de estudio modela los componentes funcionales necesarios para aplicar SMEF y analizar su contribución al comportamiento global de la implementación mediante observables hermitianos y valores de Shapley.
+The implementations were developed for methodological evaluation purposes. Each case study explicitly models the functional components required by SMEF to analyze their contribution to the overall behavior of the implementation using Hermitian observables and Shapley values.
 
-
-## Estudios de caso
+## Case Studies
 
 ### SKW
 
-Modelo funcional basado en el algoritmo de búsqueda cuántica sobre hipercubos de Shenvi, Kempe y Whaley.
+Functional model based on the Shenvi–Kempe–Whaley (SKW) quantum search algorithm on the hypercube.
 
-La implementación representa explícitamente los operadores funcionales utilizados por SMEF:
+The implementation explicitly represents the functional operators considered by SMEF:
 
-* Oráculo
-* Moneda de Grover
-* Desplazamiento flip-flop
+- Oracle
+- Grover coin
+- Flip-flop shift operator
 
 ### QPE
 
-Modelo funcional basado en la etapa de Estimación de Fase Cuántica (QPE)
-utilizada en el algoritmo de Shor.
+Functional model based on the Quantum Phase Estimation (QPE) subroutine used in Shor's algorithm.
 
-Los componentes funcionales considerados por SMEF son:
+The functional components considered by SMEF are:
 
-- B0: preparación inicial.
-- B1: generación de superposición mediante compuertas Hadamard.
-- B2,k: aplicaciones controladas del operador U^(2^k).
+- **B0:** Initial state preparation.
+- **B1:** Superposition generation using Hadamard gates.
+- **B2,k:** Controlled applications of the operator \(U^{2^k}\).
 
-La QFT inversa y la medición se utilizan como mecanismo de lectura
-de resultados y no se incluyen dentro de los componentes atribuibles
-analizados mediante valores de Shapley.
+The inverse Quantum Fourier Transform (QFT) and the measurement stage are used exclusively as the readout mechanism and are therefore not included among the functional components evaluated through Shapley values.
 
-## Objetivo
+## Objective
 
-El objetivo de estas implementaciones es servir como casos de estudio para evaluar SMEF, permitiendo:
+The objective of these implementations is to provide reproducible case studies for evaluating SMEF by enabling:
 
-* construir configuraciones parciales;
-* calcular funciones características;
-* obtener valores de Shapley;
-* analizar el impacto funcional de anomalías introducidas en los componentes.
+- construction of partial configurations;
+- computation of characteristic functions;
+- calculation of Shapley values;
+- analysis of the functional impact of anomalies introduced into individual components.
 
-## Publicación asociada
+## Associated Publication
 
-SMEF: Un marco metodológico para el análisis funcional de implementaciones cuánticas.
-
+**SMEF: A Methodological Framework for the Functional Analysis of Quantum Software Implementations.**
