@@ -39,6 +39,23 @@ The objective of these implementations is to provide reproducible case studies f
 - calculation of Shapley values;
 - analysis of the functional impact of anomalies introduced into individual components.
 
+## Requirements
+
+The implementations were developed in Python 3.10 or later.
+
+Install the required dependencies using:
+
+```bash
+pip install -r requirements.txt
+```
+The required packages are:
+
+- qiskit
+- qiskit-aer
+- numpy
+- matplotlib
+- pylatexenc
+
 ## Associated Publication
 
 **SMEF: A Methodological Framework for the Functional Analysis of Quantum Software Implementations.**
