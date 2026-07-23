@@ -1,42 +1,36 @@
-# SKW
+# SMEF Case Study: SKW Quantum Search Algorithm
 
-Implementación de SMEF aplicada al algoritmo SKW.
-Este programa implementa una simulación del algoritmo de
- búsqueda cuántica de Shenvi-Kempe-Whaley (SKW) sobre un
- hipercubo n-dimensional utilizando una representación a
- nivel de vector de estado.
+This repository contains the implementation of the Shenvi–Kempe–Whaley (SKW) quantum search algorithm used as a case study for the Software Engineering Module Evaluation Framework (SMEF).
 
- La implementación no se basa en circuitos cuánticos ni en
- compuertas físicas, sino en la aplicación directa de los
- operadores funcionales del algoritmo sobre el espacio de
- Hilbert moneda–posición:
+The program implements a simulation of the SKW quantum search algorithm on an *n*-dimensional hypercube using a state-vector representation.
 
-     O : Oráculo
-     G : Moneda de Grover
-     S : Desplazamiento flip-flop
+Unlike circuit-based implementations, the simulation does not rely on quantum gates or physical quantum circuits. Instead, it directly applies the functional operators of the algorithm to the coin–position Hilbert space.
 
- Cada estado cuántico se representa mediante un vector de
- amplitudes complejas y la evolución del sistema se obtiene
- aplicando sucesivamente los operadores funcionales SKW.
+The functional operators are:
 
- Sobre esta simulación se aplica SMEF-E
- (Software Engineering Module Evaluation Framework), considerando como componentes funcionales:
+- **O:** Oracle
+- **G:** Grover coin
+- **S:** Flip-flop shift operator
 
-     B = {O, G, S}
+Each quantum state is represented as a vector of complex amplitudes, and the system evolves through the successive application of the SKW functional operators.
 
- Para cada estado del sistema se construyen configuraciones
- parciales que preservan el orden original de ejecución.
- Los componentes ausentes se reemplazan implícitamente por
- operadores identidad.
+## SMEF Evaluation
 
- A partir de dichas configuraciones se calcula:
+SMEF (*Software Engineering Module Evaluation Framework*) is applied to the implementation by considering the following functional components:
 
-   1. Un observable funcional H_ener.
-   2. La métrica funcional M_H.
-   3. La función característica v(C).
-   4. Los valores de Shapley de cada componente.
+\[
+B=\{O,G,S\}
+\]
 
- El objetivo es cuantificar la contribución funcional del
- oráculo, la moneda de Grover y el desplazamiento dentro de
- la dinámica del algoritmo SKW, así como analizar el efecto
- de anomalías introducidas en la implementación.
+For each system state, SMEF constructs partial configurations that preserve the original execution order. Missing components are implicitly replaced by identity operators.
+
+From these configurations, SMEF computes:
+
+1. the Hermitian observable \(H_{ener}\);
+2. the functional metric \(M_H\);
+3. the characteristic function \(v(C)\);
+4. the Shapley value of each functional component.
+
+## Objective
+
+The objective of this implementation is to quantify the functional contribution of the Oracle, the Grover coin, and the flip-flop shift operator to the overall behavior of the SKW algorithm, as well as to analyze the effect of anomalies introduced into the implementation.
