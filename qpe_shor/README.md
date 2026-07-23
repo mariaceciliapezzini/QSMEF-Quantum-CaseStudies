@@ -1,29 +1,37 @@
-# Quantum Phase Estimation (QPE)
-El repositorio contiene la implementación del caso de estudio Quantum Phase Estimation (QPE) utilizado en el algoritmo de Shor para la evaluación del marco SMEF (Software Engineering Module Evaluation Framework).
+# SMEF Case Study: Quantum Phase Estimation (QPE) in Shor's Algorithm
 
-Objetivo
-Analizar la contribución funcional de los componentes de la etapa cuántica de Shor mediante teoría de juegos cooperativos y valores de Shapley.
+This repository contains the implementation of the Quantum Phase Estimation (QPE) case study used in Shor's algorithm for evaluating the Software Engineering Module Evaluation Framework (SMEF).
 
-Descripción
-La implementación construye el circuito de estimación de fase utilizado para determinar el período r de la función:
-f(x)=axmodN
+## Objective
 
-Posteriormente, SMEF descompone la implementación en bloques funcionales:
+The objective of this implementation is to analyze the functional contribution of the components of the quantum phase estimation stage of Shor's algorithm using cooperative game theory and Shapley values.
 
-B0: preparación del registro de trabajo.
-B1: generación de superposición uniforme.
-B2,k: aplicaciones controladas de U
-Readout: transformada cuántica de Fourier inversa (QFT†).
+## Description
 
-Evaluación mediante SMEF
-Para cada coalición de bloques:
+The implementation constructs the quantum phase estimation circuit used to estimate the period \(r\) of the function
 
-Se preserva el orden original de ejecución.
-Los bloques ausentes se reemplazan implícitamente por la identidad.
-Se calcula una métrica funcional basada en un observable de periodicidad.
-Se construye la función característica v(C).
-Se obtienen los valores de Shapley de cada bloque.
-Detección de anomalías
+\[
+f(x)=a^x \bmod N.
+\]
 
-La implementación permite introducir perturbaciones controladas en los bloques de fase.
-Esto permite analizar cómo las anomalías modifican las contribuciones funcionales identificadas por SMEF.
+SMEF decomposes the implementation into the following functional components:
+
+- **B0:** Work-register initialization.
+- **B1:** Uniform superposition generation using Hadamard gates.
+- **B2,k:** Controlled applications of the operator \(U^{2^k}\).
+
+The inverse Quantum Fourier Transform (QFT†) followed by measurement constitutes the readout stage. This stage is used exclusively to obtain the measurement outcomes and is therefore not included among the functional components evaluated through Shapley values.
+
+## SMEF Evaluation
+
+For each coalition of functional components:
+
+- the original execution order is preserved;
+- absent components are implicitly replaced by the identity operator;
+- a functional metric based on a Hermitian periodicity observable is computed;
+- the characteristic function \(v(C)\) is constructed;
+- the Shapley value of each functional component is calculated.
+
+## Anomaly Detection
+
+The implementation supports the introduction of controlled perturbations into the phase blocks. These perturbations enable the analysis of how anomalies modify the functional contributions of the individual components identified by SMEF.
