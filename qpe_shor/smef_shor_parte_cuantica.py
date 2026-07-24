@@ -1,17 +1,13 @@
-"""smef_shor_parte_cuantica.ipynb
-
-
-
-SMEF aplicado a la parte cuántica del algoritmo de Shor: gráficos bilingües.
-"""
-
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.circuit.library import QFTGate
 from qiskit.circuit import Gate
+from qiskit.quantum_info import Statevector, Operator
 
-import math
-
-# ---------- 1) Unidadaria U: |y> -> |a*y mod 15> (hardcode N=15) ----------
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+from math import gcd, ceil, log2, factorial
+import itertools
 
 def amod15(a: int):
     """
@@ -22,7 +18,7 @@ def amod15(a: int):
 
     U = QuantumCircuit(4, name=f"{a} mod 15")
 
-    # Estas permutaciones están tomadas de tu código original c_amod15
+    
     if a in [2, 13]:
         U.swap(2, 3)
         U.swap(1, 2)
@@ -47,8 +43,6 @@ def controlled_amod15(a: int):
     return amod15(a).control(1)
 
 
-# ---------- 2) Inverse QFT sobre el registro de conteo ----------
-
 def inverse_qft(num_qubits: int) -> Gate:
     """Devuelve la puerta QFT inversa sobre num_qubits qubits (compatible con Qiskit 2.1+)."""
     # QFT directa con parámetros por defecto
@@ -58,10 +52,6 @@ def inverse_qft(num_qubits: int) -> Gate:
     qft_dagger.label = "QFT†"
     return qft_dagger
 
-
-
-
-# ---------- 3) Construcción del circuito de Shor (orden-finding) ----------
 
 def build_shor_order_finding_circuit(a: int = 2,
                                      N: int = 15,
@@ -87,58 +77,38 @@ def build_shor_order_finding_circuit(a: int = 2,
     else:
         qc = QuantumCircuit(count, work)
 
-    # 1) Inicializar |work> = |1> (estado base '0001')
     qc.x(work[0])
 
-    # 2) Poner el registro de conteo en superposición uniforme
+  
     qc.h(count)
 
-    # 3) Aplicar U^{2^k} controlado por cada qubit de conteo
+    
     cU = controlled_amod15(a)   # 1 control + 4 target
     for k in range(precision):
         # Aplicar U^{2^k} controlada por count[k]
         for _ in range(2**k):
             qc.append(cU, [count[k]] + list(work))
 
-    # 4) Aplicar la QFT inversa al registro de conteo
+   
     qc.append(inverse_qft(precision), count)
 
-    # 5) Medir (opcional)
+   
     if measure:
         qc.measure(count, c_reg)
 
     return qc
 
-## Algoritmo de shor
+
 
 qc_shor = build_shor_order_finding_circuit(a=2, N=15, precision=4, measure=True)
 qc_shor.draw(output='mpl')
 
-## Parte cuantica
+
 
 qc_shor_quantum = build_shor_order_finding_circuit(a=2, N=15, precision=4, measure=False)
 qc_shor_quantum.draw(output='mpl')
 
-# ============================================================
-# SMEF para Shor/QPE con observable de periodicidad H_per
-# y anomalia
 
-# ============================================================
-import numpy as np
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
-from math import gcd, ceil, log2, factorial
-import itertools
-
-from qiskit import QuantumCircuit, QuantumRegister
-from qiskit.circuit import Gate
-from qiskit.quantum_info import Statevector, Operator
-
-# ============================================================
-# CONFIGURACIÓN DE IDIOMA PARA LOS GRÁFICOS
-
-# ============================================================
 # Valores admitidos:
 #   "es" -> castellano (tesis)
 #   "en" -> inglés (paper CACIC)
@@ -206,11 +176,6 @@ def plot_text(key: str) -> str:
         raise ValueError("LANGUAGE debe ser 'es' o 'en'.")
     return PLOT_TEXTS[LANGUAGE][key]
 
-# ============================================================
-# 1) Orden multiplicativo
-
-# ============================================================
-
 def multiplicative_order(a: int, N: int) -> int:
     if gcd(a, N) != 1:
         raise ValueError("a y N deben ser coprimos para que exista orden multiplicativo.")
@@ -226,11 +191,6 @@ def multiplicative_order(a: int, N: int) -> int:
             raise RuntimeError("Orden demasiado grande/no encontrado.")
 
     return r
-
-# ============================================================
-# 2) U_{a,N}: |y> -> |a*y mod N>
-
-# ============================================================
 
 def amodN_gate(a: int, N: int) -> Gate:
     if gcd(a, N) != 1:
@@ -258,11 +218,6 @@ def controlled_amodN(a: int, N: int) -> Gate:
     """
     return amodN_gate(a, N).control(1, annotated=True)
 
-# ============================================================
-# 3) QFT inversa
-
-# ============================================================
-
 def inverse_qft_gate(m: int) -> Gate:
     r"""QFT^\dagger sobre m qubits."""
     qc = QuantumCircuit(m, name="QFT†")
@@ -277,11 +232,6 @@ def inverse_qft_gate(m: int) -> Gate:
         qc.h(j)
 
     return qc.to_gate()
-
-# ============================================================
-# 4) Índices de éxito M_r
-
-# ============================================================
 
 def default_eps_for_precision(precision: int, bins: float = 1.0) -> float:
     return bins / (2 ** precision)
@@ -307,11 +257,6 @@ def success_indices_eps(
 
     return good
 
-# ============================================================
-# 5) Probabilidad de éxito
-
-# ============================================================
-
 def success_probability(
     state_after_readout: Statevector,
     precision: int,
@@ -325,11 +270,6 @@ def success_probability(
 
     return float(np.sum(probs[good]))
 
-# ============================================================
-   # ============================================================
-# 6) Construcción de bloques
-
-# ============================================================
 def build_shor_blocks(
     a: int,
     N: int,
@@ -396,10 +336,6 @@ def build_shor_blocks(
 
     return count, work, blocks_all, labels, readout
 
-# ============================================================
-# 7) SMEF Shor/QPE con Shapley
-
-# ============================================================
 def smefe_shor_phase_blocks_shapley(
     a: int,
     N: int,
@@ -709,11 +645,6 @@ def smefe_shor_phase_blocks_shapley(
         E_full
     )
 
-# ============================================================
-# 8) Checks
-
-# ============================================================
-
 def check_shapley_efficiency(shapley_vals, v_values, tol: float = 1e-10):
     n_players = len(shapley_vals)
     full_mask = (1 << n_players) - 1
@@ -786,11 +717,6 @@ def check_probability_range(E_values, tol: float = 1e-12):
         print("[WARN] Hay valores fuera del rango [0,1].")
     else:
         print("[OK] Todas las probabilidades E(C) están en [0,1].")
-
-# ============================================================
-# 9) Observable H_per
-
-# ============================================================
 
 def build_H_per_count(precision: int, good_m):
     dim = 2 ** precision
@@ -888,11 +814,6 @@ def check_probability_vs_expectation(
         print("[OK] Coinciden probabilidad y valor esperado.")
     else:
         print("[WARN] NO coinciden.")
-
-# ============================================================
-# 10) Comparaciones
-
-# ============================================================
 
 def compare_shapley_correct_vs_faulty(
     labels,
@@ -1034,33 +955,13 @@ def print_comparison_table(
 
     print("=" * 80)
 
-# ============================================================
-# 11) Parámetros
-
-# ============================================================
-
 N = 21
 a = 2
 precision = 5
 
-# ============================================================
-# 12) Elegí una anomalía
-
-# ============================================================
-
 faulty_phase_block = 4
 faulty_mode = "wrong_unitary"
 faulty_a = 8
-
-# Alternativa más fuerte:
-# faulty_phase_block = 4
-# faulty_mode = "skip_block"
-# faulty_a = None
-
-# ============================================================
-# 13) Caso correcto
-
-# ============================================================
 
 labels, shapley_vals, v_values, E_values, good_m, r, eps_used, E_empty, E_full = (
     smefe_shor_phase_blocks_shapley(
@@ -1135,11 +1036,6 @@ print_numeric_summary(
     title="Implementación correcta"
 )
 
-# ============================================================
-# 14) Caso perturbado
-
-# ============================================================
-
 labels_fault, shapley_vals_fault, v_values_fault, E_values_fault, good_m_fault, r_fault, eps_fault, E_empty_fault, E_full_fault = (
     smefe_shor_phase_blocks_shapley(
         a=a,
@@ -1211,11 +1107,6 @@ print_numeric_summary(
     title="Implementación perturbada"
 )
 
-# ============================================================
-# 15) Comparación final
-
-# ============================================================
-
 compare_shapley_correct_vs_faulty(
     labels,
     shapley_vals,
@@ -1230,17 +1121,8 @@ print_comparison_table(
     shapley_vals_fault
 )
 
-# ============================================================
-# 16) VISUALIZACIÓN DE LA DEPENDENCIA DEL ORDEN (PERMUTACIONES)
-
-# ============================================================
-
 def visualize_order_dependence(v_values, labels, title=None):
-    """
-    Calcula y grafica:
-    1. Contribución marginal promedio de cada jugador según su posición en la permutación (heatmap).
-    2. Histograma de contribuciones marginales para cada jugador (para ver varianza).
-    """
+   
     if title is None:
         title = plot_text("order_dependence")
 
@@ -1316,11 +1198,6 @@ def visualize_order_dependence(v_values, labels, title=None):
     plt.show()
 
     return position_contrib, all_marginals
-
-# ============================================================
-# EJECUCIÓN DE LA VISUALIZACIÓN
-
-# ============================================================
 
 # Para el caso correcto:
 pos_contrib_ok, marginals_ok = visualize_order_dependence(
