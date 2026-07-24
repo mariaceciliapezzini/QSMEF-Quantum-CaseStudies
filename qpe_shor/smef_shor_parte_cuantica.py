@@ -1,6 +1,9 @@
-# -*- coding: utf-8 -*-
-"""SMEF Shor parte cuantica.ipynb
-!pip install qiskit qiskit-aer pylatexenc
+"""smef_shor_parte_cuantica.ipynb
+
+
+
+SMEF aplicado a la parte cuántica del algoritmo de Shor: gráficos bilingües.
+"""
 
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.circuit.library import QFTGate
@@ -13,7 +16,6 @@ import math
 def amod15(a: int):
     """
     Implementa U: |y> -> |a*y mod 15> sobre 4 qubits (y en binario).
-    Versión sin control (después la haremos controlada).
     """
     if a not in [2, 4, 7, 8, 11, 13]:
         raise ValueError("'a' debe ser coprimo con 15 y estar en {2,4,7,8,11,13}")
@@ -117,17 +119,12 @@ qc_shor.draw(output='mpl')
 qc_shor_quantum = build_shor_order_finding_circuit(a=2, N=15, precision=4, measure=False)
 qc_shor_quantum.draw(output='mpl')
 
-"""CON SHAPLEY COMPLETO"""
-
 # ============================================================
 # SMEF para Shor/QPE con observable de periodicidad H_per
 # y anomalia
-#
+
 # ============================================================
-
-# En Colab, si no tenés Qiskit instalado, ejecutá primero:
-# !pip -q install qiskit
-
+import numpy as np
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
@@ -138,9 +135,80 @@ from qiskit import QuantumCircuit, QuantumRegister
 from qiskit.circuit import Gate
 from qiskit.quantum_info import Statevector, Operator
 
+# ============================================================
+# CONFIGURACIÓN DE IDIOMA PARA LOS GRÁFICOS
+
+# ============================================================
+# Valores admitidos:
+#   "es" -> castellano (tesis)
+#   "en" -> inglés (paper CACIC)
+LANGUAGE = "en"
+
+PLOT_TEXTS = {
+    "es": {
+        "shapley_value": "Valor de Shapley",
+        "initial_preparation": "Preparación inicial",
+        "superposition": "Superposición",
+        "controlled_phase": "Fase controlada",
+        "correct": "Correcta",
+        "faulty": "Perturbada",
+        "comparison_title": "Comparación de valores de Shapley: correcta vs. perturbada",
+        "shapley_correct_title": "SMEF Shapley completo Shor-QPE",
+        "shapley_faulty_title": "SMEF Shapley completo Shor-QPE perturbado",
+        "fault": "anomalía",
+        "mode": "modo",
+        "order_dependence": "Dependencia del orden",
+        "correct_case": "Caso correcto",
+        "faulty_case": "Caso perturbado",
+        "permutation_position": "Posición en la permutación (0 = primero, n-1 = último)",
+        "player": "Componente",
+        "average_marginal_by_position": "Contribución marginal promedio por posición",
+        "marginal_contribution": "Contribución marginal",
+        "zero_contribution": "Contribución cero",
+        "marginal_distribution": "Distribución de contribuciones marginales por componente",
+        "probability_density": "Densidad de probabilidad",
+        "position_evolution": "Evolución de la contribución según la posición",
+        "permutation_position_short": "Posición en la permutación",
+        "average_marginal": "Contribución marginal promedio",
+    },
+    "en": {
+        "shapley_value": "Shapley value",
+        "initial_preparation": "Initial preparation",
+        "superposition": "Superposition",
+        "controlled_phase": "Controlled phase",
+        "correct": "Correct",
+        "faulty": "Perturbed",
+        "comparison_title": "Comparison of Shapley values: correct vs. perturbed implementation",
+        "shapley_correct_title": "Complete SMEF Shapley analysis for Shor-QPE",
+        "shapley_faulty_title": "Complete SMEF Shapley analysis for perturbed Shor-QPE",
+        "fault": "fault",
+        "mode": "mode",
+        "order_dependence": "Order dependence",
+        "correct_case": "Correct case",
+        "faulty_case": "Perturbed case",
+        "permutation_position": "Position in the permutation (0 = first, n-1 = last)",
+        "player": "Component",
+        "average_marginal_by_position": "Average marginal contribution by position",
+        "marginal_contribution": "Marginal contribution",
+        "zero_contribution": "Zero contribution",
+        "marginal_distribution": "Distribution of marginal contributions by component",
+        "probability_density": "Probability density",
+        "position_evolution": "Evolution of the contribution by position",
+        "permutation_position_short": "Position in the permutation",
+        "average_marginal": "Average marginal contribution",
+    },
+}
+
+
+def plot_text(key: str) -> str:
+    """Devuelve el texto del gráfico en el idioma seleccionado."""
+    if LANGUAGE not in PLOT_TEXTS:
+        raise ValueError("LANGUAGE debe ser 'es' o 'en'.")
+    return PLOT_TEXTS[LANGUAGE][key]
 
 # ============================================================
 # 1) Orden multiplicativo
+
 # ============================================================
 
 def multiplicative_order(a: int, N: int) -> int:
@@ -159,9 +227,9 @@ def multiplicative_order(a: int, N: int) -> int:
 
     return r
 
-
 # ============================================================
 # 2) U_{a,N}: |y> -> |a*y mod N>
+
 # ============================================================
 
 def amodN_gate(a: int, N: int) -> Gate:
@@ -190,9 +258,9 @@ def controlled_amodN(a: int, N: int) -> Gate:
     """
     return amodN_gate(a, N).control(1, annotated=True)
 
-
 # ============================================================
 # 3) QFT inversa
+
 # ============================================================
 
 def inverse_qft_gate(m: int) -> Gate:
@@ -210,9 +278,9 @@ def inverse_qft_gate(m: int) -> Gate:
 
     return qc.to_gate()
 
-
 # ============================================================
 # 4) Índices de éxito M_r
+
 # ============================================================
 
 def default_eps_for_precision(precision: int, bins: float = 1.0) -> float:
@@ -239,9 +307,9 @@ def success_indices_eps(
 
     return good
 
-
 # ============================================================
 # 5) Probabilidad de éxito
+
 # ============================================================
 
 def success_probability(
@@ -257,12 +325,11 @@ def success_probability(
 
     return float(np.sum(probs[good]))
 
-
 # ============================================================
    # ============================================================
 # 6) Construcción de bloques
-# ============================================================
 
+# ============================================================
 def build_shor_blocks(
     a: int,
     N: int,
@@ -270,7 +337,9 @@ def build_shor_blocks(
     faulty_phase_block=None,
     faulty_mode=None,
     faulty_a=None
-   ):
+):
+    # Número de qubits necesarios para el registro de trabajo
+    work_qubits = int(np.ceil(np.log2(N)))
 
     count = QuantumRegister(precision, "count")
     work = QuantumRegister(work_qubits, "work")
@@ -293,7 +362,6 @@ def build_shor_blocks(
         cU_block = cU_correct
 
         if faulty_phase_block is not None and k == faulty_phase_block:
-
             if faulty_mode == "missing_repeat":
                 repeats = max(0, repeats - 1)
 
@@ -302,7 +370,7 @@ def build_shor_blocks(
 
             elif faulty_mode == "wrong_unitary":
                 if faulty_a is None:
-                    raise ValueError("Debés indicar faulty_a para faulty_mode='wrong_unitary'.")
+                    raise ValueError("Indicar faulty_a para faulty_mode='wrong_unitary'.")
 
                 if gcd(faulty_a, N) != 1:
                     raise ValueError("faulty_a y N deben ser coprimos.")
@@ -330,6 +398,7 @@ def build_shor_blocks(
 
 # ============================================================
 # 7) SMEF Shor/QPE con Shapley
+
 # ============================================================
 def smefe_shor_phase_blocks_shapley(
     a: int,
@@ -339,6 +408,8 @@ def smefe_shor_phase_blocks_shapley(
     eps_bins: float = 1.0,
     exclude_zero_peak: bool = True,
     plot: bool = True,
+    save: bool = False,
+    filename_prefix: str = "shapley_qpe",
     verbose: bool = True,
     faulty_phase_block=None,
     faulty_mode=None,
@@ -348,7 +419,10 @@ def smefe_shor_phase_blocks_shapley(
     r = multiplicative_order(a, N)
 
     if eps is None:
-        eps = default_eps_for_precision(precision, bins=eps_bins)
+        eps = default_eps_for_precision(
+            precision,
+            bins=eps_bins
+        )
 
     good_m = success_indices_eps(
         precision=precision,
@@ -380,26 +454,46 @@ def smefe_shor_phase_blocks_shapley(
         print(f"n_players = {n_players}")
 
         if faulty_phase_block is not None:
-            print(f"[FAULT] Bloque perturbado: B_{{2,{faulty_phase_block}}}")
-            print(f"[FAULT] Tipo de anomalía: {faulty_mode}")
+            print(
+                f"[FAULT] Bloque perturbado: "
+                f"B_{{2,{faulty_phase_block}}}"
+            )
+            print(
+                f"[FAULT] Tipo de anomalía: "
+                f"{faulty_mode}"
+            )
 
             if faulty_mode == "wrong_unitary":
-                print(f"[FAULT] Unidad incorrecta: a_fault = {faulty_a}")
+                print(
+                    f"[FAULT] Unidad incorrecta: "
+                    f"a_fault = {faulty_a}"
+                )
 
     num_coalitions = 2 ** n_players
-    E_values = np.zeros(num_coalitions, dtype=float)
+    E_values = np.zeros(
+        num_coalitions,
+        dtype=float
+    )
 
     if verbose:
-        print("\n=== Evaluando E(C) para todas las coaliciones ===")
+        print(
+            "\n=== Evaluando E(C) para todas las coaliciones ==="
+        )
 
     for mask in range(num_coalitions):
-        psi = Statevector.from_label("0" * n_total)
+        psi = Statevector.from_label(
+            "0" * n_total
+        )
 
         for b in range(n_players):
             if (mask >> b) & 1:
-                psi = psi.evolve(blocks_all[b])
+                psi = psi.evolve(
+                    blocks_all[b]
+                )
 
-        psi_read = psi.evolve(readout)
+        psi_read = psi.evolve(
+            readout
+        )
 
         E_values[mask] = success_probability(
             psi_read,
@@ -410,11 +504,19 @@ def smefe_shor_phase_blocks_shapley(
     E_empty = E_values[0]
     v_values = E_values - E_empty
 
-    shapley_vals = np.zeros(n_players, dtype=float)
-    n_fact = factorial(n_players)
+    shapley_vals = np.zeros(
+        n_players,
+        dtype=float
+    )
+
+    n_fact = factorial(
+        n_players
+    )
 
     if verbose:
-        print("\n=== Cálculo de Shapley ===")
+        print(
+            "\n=== Cálculo de Shapley ==="
+        )
 
     for i in range(n_players):
         phi = 0.0
@@ -431,89 +533,185 @@ def smefe_shor_phase_blocks_shapley(
 
             weight = (
                 factorial(s)
-                * factorial(n_players - s - 1)
+                * factorial(
+                    n_players - s - 1
+                )
                 / n_fact
             )
 
-            phi += weight * (v_Si - v_S)
+            phi += weight * (
+                v_Si - v_S
+            )
 
         shapley_vals[i] = phi
 
         if verbose:
-            print(f"{labels[i]}: Shapley = {phi:.6f}")
+            print(
+                f"{labels[i]}: "
+                f"Shapley = {phi:.6f}"
+            )
 
-    full_mask = (1 << n_players) - 1
-    V_full = v_values[full_mask]
-    E_full = E_values[full_mask]
+    full_mask = (
+        1 << n_players
+    ) - 1
+
+    V_full = v_values[
+        full_mask
+    ]
+
+    E_full = E_values[
+        full_mask
+    ]
 
     if verbose:
-        print(f"\nE(∅) = {E_empty:.6f}")
-        print(f"E(N) = {E_full:.6f}")
-        print(f"v(N) = E(N) - E(∅) = {V_full:.6f}")
+        print(
+            f"\nE(∅) = {E_empty:.6f}"
+        )
+        print(
+            f"E(N) = {E_full:.6f}"
+        )
+        print(
+            f"v(N) = E(N) - E(∅) = "
+            f"{V_full:.6f}"
+        )
 
     if plot:
         colors = [
-            "tab:gray" if lab == "B0"
-            else "tab:orange" if lab == "B1"
+            "tab:gray"
+            if lab == "B0"
+            else "tab:orange"
+            if lab == "B1"
             else "tab:blue"
             for lab in labels
         ]
 
         display_labels = [
-            r"$B_0$" if lab == "B0"
-            else r"$B_1$" if lab == "B1"
+            r"$B_0$"
+            if lab == "B0"
+            else r"$B_1$"
+            if lab == "B1"
             else rf"$B_{{2,{lab.split(',')[1]}}}$"
             for lab in labels
         ]
 
-        plt.figure(figsize=(10, 4))
-        plt.bar(display_labels, shapley_vals, color=colors)
-        plt.ylabel("Valor de Shapley")
+        fig, ax = plt.subplots(
+            figsize=(10, 4)
+        )
+
+        ax.bar(
+            display_labels,
+            shapley_vals,
+            color=colors
+        )
+
+        ax.set_ylabel(
+            plot_text("shapley_value")
+        )
 
         suffix = ""
 
         if faulty_phase_block is not None:
             suffix = (
-                f" | fault=B_{{2,{faulty_phase_block}}}, "
-                f"mode={faulty_mode}"
+                f" | {plot_text('fault')}="
+                f"$B_{{2,{faulty_phase_block}}}$, "
+                f"{plot_text('mode')}="
+                f"{faulty_mode}"
             )
 
             if faulty_mode == "wrong_unitary":
-                suffix += f", a_fault={faulty_a}"
+                suffix += (
+                    f", $a_{{fault}}="
+                    f"{faulty_a}$"
+                )
 
-        plt.title(
+        ax.set_title(
             f"{plot_title_prefix} "
-            f"(N={N}, a={a}, eps={eps:.3g}){suffix}"
+            f"(N={N}, a={a}, "
+            f"eps={eps:.3g})"
+            f"{suffix}"
         )
 
-        plt.xticks(rotation=45)
-        plt.grid(axis="y", alpha=0.3)
+        ax.tick_params(
+            axis="x",
+            rotation=45
+        )
 
-        plt.legend(
+        ax.grid(
+            axis="y",
+            alpha=0.3
+        )
+
+        ax.legend(
             handles=[
                 Patch(
                     facecolor="tab:gray",
-                    label=r"$B_0$ Preparación inicial"
+                    label=(
+                        rf"$B_0$ "
+                        f"{plot_text('initial_preparation')}"
+                    )
                 ),
                 Patch(
                     facecolor="tab:orange",
-                    label=r"$B_1$ Superposición"
+                    label=(
+                        rf"$B_1$ "
+                        f"{plot_text('superposition')}"
+                    )
                 ),
                 Patch(
                     facecolor="tab:blue",
-                    label=r"$B_{2,j}$ Fase controlada"
+                    label=(
+                        rf"$B_{{2,j}}$ "
+                        f"{plot_text('controlled_phase')}"
+                    )
                 )
             ],
             loc="best"
         )
 
-        plt.tight_layout()
-        plt.show()
+        fig.tight_layout()
 
-    return labels, shapley_vals, v_values, E_values, good_m, r, eps, E_empty, E_full
+        if save:
+            fig.savefig(
+                f"{filename_prefix}.png",
+                dpi=600,
+                bbox_inches="tight"
+            )
+
+            fig.savefig(
+                f"{filename_prefix}.pdf",
+                bbox_inches="tight"
+            )
+
+            if verbose:
+                print(
+                    "\nFiguras guardadas:"
+                )
+                print(
+                    f"- {filename_prefix}.png "
+                    f"(600 dpi)"
+                )
+                print(
+                    f"- {filename_prefix}.pdf"
+                )
+
+        plt.show()
+        plt.close(fig)
+
+    return (
+        labels,
+        shapley_vals,
+        v_values,
+        E_values,
+        good_m,
+        r,
+        eps,
+        E_empty,
+        E_full
+    )
 
 # ============================================================
 # 8) Checks
+
 # ============================================================
 
 def check_shapley_efficiency(shapley_vals, v_values, tol: float = 1e-10):
@@ -589,9 +787,9 @@ def check_probability_range(E_values, tol: float = 1e-12):
     else:
         print("[OK] Todas las probabilidades E(C) están en [0,1].")
 
-
 # ============================================================
 # 9) Observable H_per
+
 # ============================================================
 
 def build_H_per_count(precision: int, good_m):
@@ -691,26 +889,73 @@ def check_probability_vs_expectation(
     else:
         print("[WARN] NO coinciden.")
 
-
 # ============================================================
 # 10) Comparaciones
+
 # ============================================================
 
-def compare_shapley_correct_vs_faulty(labels, shapley_ok, shapley_faulty):
+def compare_shapley_correct_vs_faulty(
+    labels,
+    shapley_ok,
+    shapley_faulty,
+    save: bool = False,
+    filename_prefix: str = "shapley_qpe_comparison"
+):
     x = np.arange(len(labels))
     width = 0.38
 
-    plt.figure(figsize=(11, 4))
-    plt.bar(x - width / 2, shapley_ok, width=width, label="Correcta")
-    plt.bar(x + width / 2, shapley_faulty, width=width, label="Perturbada")
+    display_labels = [
+        r"$B_0$" if lab == "B0"
+        else r"$B_1$" if lab == "B1"
+        else rf"$B_{{2,{lab.split(',')[1]}}}$"
+        for lab in labels
+    ]
 
-    plt.xticks(x, labels, rotation=45)
-    plt.ylabel("Valor de Shapley")
-    plt.title("Comparación de valores de Shapley: correcta vs perturbada")
-    plt.grid(axis="y", alpha=0.3)
-    plt.legend()
-    plt.tight_layout()
+    fig, ax = plt.subplots(figsize=(11, 4))
+
+    ax.bar(
+        x - width / 2,
+        shapley_ok,
+        width=width,
+        label=plot_text("correct")
+    )
+
+    ax.bar(
+        x + width / 2,
+        shapley_faulty,
+        width=width,
+        label=plot_text("faulty")
+    )
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(display_labels, rotation=45)
+
+    ax.set_ylabel(plot_text("shapley_value"))
+    ax.set_title(plot_text("comparison_title"))
+
+    ax.grid(axis="y", alpha=0.3)
+    ax.legend()
+
+    fig.tight_layout()
+
+    if save:
+        fig.savefig(
+            f"{filename_prefix}.png",
+            dpi=600,
+            bbox_inches="tight"
+        )
+
+        fig.savefig(
+            f"{filename_prefix}.pdf",
+            bbox_inches="tight"
+        )
+
+        print("\nFigura comparativa guardada:")
+        print(f"- {filename_prefix}.png (600 dpi)")
+        print(f"- {filename_prefix}.pdf")
+
     plt.show()
+    plt.close(fig)
 
 
 def print_numeric_summary(
@@ -731,6 +976,7 @@ def print_numeric_summary(
     print(f"E(N) = {E_full:.6f}")
     print(f"v(N) = E(N) - E(∅) = {V_full:.6f}")
     print(f"Suma Shapley = {np.sum(shapley_vals):.6f}")
+
     print("-" * 60)
     print(f"{'Bloque':<15} {'phi_b':>12}")
     print("-" * 60)
@@ -741,29 +987,56 @@ def print_numeric_summary(
     print("=" * 60)
 
 
-def print_comparison_table(labels, shapley_ok, shapley_faulty):
+def print_comparison_table(
+    labels,
+    shapley_ok,
+    shapley_faulty
+):
+    total_ok = np.sum(shapley_ok)
+    total_faulty = np.sum(shapley_faulty)
+    total_diff = total_faulty - total_ok
+
     print("\n" + "=" * 80)
     print("Comparación bloque por bloque: correcta vs perturbada")
     print("=" * 80)
-    print(f"{'Bloque':<15} {'Correcta':>12} {'Perturbada':>14} {'Diferencia':>14}")
+
+    print(
+        f"{'Bloque':<15}"
+        f"{'Correcta':>12}"
+        f"{'Perturbada':>14}"
+        f"{'Diferencia':>14}"
+    )
+
     print("-" * 80)
 
-    for lab, phi_ok, phi_fault in zip(labels, shapley_ok, shapley_faulty):
+    for lab, phi_ok, phi_fault in zip(
+        labels,
+        shapley_ok,
+        shapley_faulty
+    ):
         diff = phi_fault - phi_ok
-        print(f"{lab:<15} {phi_ok:>12.6f} {phi_fault:>14.6f} {diff:>14.6f}")
+
+        print(
+            f"{lab:<15}"
+            f"{phi_ok:>12.6f}"
+            f"{phi_fault:>14.6f}"
+            f"{diff:>14.6f}"
+        )
 
     print("=" * 80)
+
     print(
-        f"{'Suma':<15} "
-        f"{np.sum(shapley_ok):>12.6f} "
-        f"{np.sum(shapley_faulty):>14.6f} "
-        f"{(np.sum(shapley_faulty) - np.sum(shapley_ok)):>14.6f}"
+        f"{'Suma':<15}"
+        f"{total_ok:>12.6f}"
+        f"{total_faulty:>14.6f}"
+        f"{total_diff:>14.6f}"
     )
-    print("=" * 80)
 
+    print("=" * 80)
 
 # ============================================================
 # 11) Parámetros
+
 # ============================================================
 
 N = 21
@@ -772,6 +1045,7 @@ precision = 5
 
 # ============================================================
 # 12) Elegí una anomalía
+
 # ============================================================
 
 faulty_phase_block = 4
@@ -783,24 +1057,28 @@ faulty_a = 8
 # faulty_mode = "skip_block"
 # faulty_a = None
 
-
 # ============================================================
 # 13) Caso correcto
+
 # ============================================================
 
-labels, shapley_vals, v_values, E_values, good_m, r, eps_used, E_empty, E_full = smefe_shor_phase_blocks_shapley(
-    a=a,
-    N=N,
-    precision=precision,
-    eps=None,
-    eps_bins=1.0,
-    exclude_zero_peak=True,
-    plot=True,
-    verbose=True,
-    faulty_phase_block=None,
-    faulty_mode=None,
-    faulty_a=None,
-    plot_title_prefix="SMEF Shapley completo Shor-QPE"
+labels, shapley_vals, v_values, E_values, good_m, r, eps_used, E_empty, E_full = (
+    smefe_shor_phase_blocks_shapley(
+        a=a,
+        N=N,
+        precision=precision,
+        eps=None,
+        eps_bins=1.0,
+        exclude_zero_peak=True,
+        plot=True,
+        save=True,
+        filename_prefix="shapley_qpe_correct",
+        verbose=True,
+        faulty_phase_block=None,
+        faulty_mode=None,
+        faulty_a=None,
+        plot_title_prefix=plot_text("shapley_correct_title")
+    )
 )
 
 print("\nPeríodo r =", r)
@@ -811,14 +1089,31 @@ print("Shapley =", shapley_vals)
 print("E(∅) =", E_empty)
 print("E(N) =", E_full)
 
-check_shapley_efficiency(shapley_vals, v_values)
-check_shapley_permutation_consistency(shapley_vals, v_values)
-check_probability_range(E_values)
+check_shapley_efficiency(
+    shapley_vals,
+    v_values
+)
+
+check_shapley_permutation_consistency(
+    shapley_vals,
+    v_values
+)
+
+check_probability_range(
+    E_values
+)
 
 work_qubits = ceil(log2(N))
-H_per_full = build_H_per_full_matrix(precision, work_qubits, good_m)
 
-check_projector_properties(H_per_full)
+H_per_full = build_H_per_full_matrix(
+    precision,
+    work_qubits,
+    good_m
+)
+
+check_projector_properties(
+    H_per_full
+)
 
 check_probability_vs_expectation(
     a=a,
@@ -840,24 +1135,28 @@ print_numeric_summary(
     title="Implementación correcta"
 )
 
-
 # ============================================================
 # 14) Caso perturbado
+
 # ============================================================
 
-labels_fault, shapley_vals_fault, v_values_fault, E_values_fault, good_m_fault, r_fault, eps_fault, E_empty_fault, E_full_fault = smefe_shor_phase_blocks_shapley(
-    a=a,
-    N=N,
-    precision=precision,
-    eps=None,
-    eps_bins=1.0,
-    exclude_zero_peak=True,
-    plot=True,
-    verbose=True,
-    faulty_phase_block=faulty_phase_block,
-    faulty_mode=faulty_mode,
-    faulty_a=faulty_a,
-    plot_title_prefix="SMEF Shapley completo Shor-QPE perturbado"
+labels_fault, shapley_vals_fault, v_values_fault, E_values_fault, good_m_fault, r_fault, eps_fault, E_empty_fault, E_full_fault = (
+    smefe_shor_phase_blocks_shapley(
+        a=a,
+        N=N,
+        precision=precision,
+        eps=None,
+        eps_bins=1.0,
+        exclude_zero_peak=True,
+        plot=True,
+        save=True,
+        filename_prefix="shapley_qpe_faulty",
+        verbose=True,
+        faulty_phase_block=faulty_phase_block,
+        faulty_mode=faulty_mode,
+        faulty_a=faulty_a,
+        plot_title_prefix=plot_text("shapley_faulty_title")
+    )
 )
 
 print("\n[FAULTY] Período r =", r_fault)
@@ -868,9 +1167,19 @@ print("[FAULTY] Shapley =", shapley_vals_fault)
 print("[FAULTY] E(∅) =", E_empty_fault)
 print("[FAULTY] E(N) =", E_full_fault)
 
-check_shapley_efficiency(shapley_vals_fault, v_values_fault)
-check_shapley_permutation_consistency(shapley_vals_fault, v_values_fault)
-check_probability_range(E_values_fault)
+check_shapley_efficiency(
+    shapley_vals_fault,
+    v_values_fault
+)
+
+check_shapley_permutation_consistency(
+    shapley_vals_fault,
+    v_values_fault
+)
+
+check_probability_range(
+    E_values_fault
+)
 
 H_per_full_fault = build_H_per_full_matrix(
     precision,
@@ -878,7 +1187,9 @@ H_per_full_fault = build_H_per_full_matrix(
     good_m_fault
 )
 
-check_projector_properties(H_per_full_fault)
+check_projector_properties(
+    H_per_full_fault
+)
 
 check_probability_vs_expectation(
     a=a,
@@ -900,15 +1211,17 @@ print_numeric_summary(
     title="Implementación perturbada"
 )
 
-
 # ============================================================
 # 15) Comparación final
+
 # ============================================================
 
 compare_shapley_correct_vs_faulty(
     labels,
     shapley_vals,
-    shapley_vals_fault
+    shapley_vals_fault,
+    save=True,
+    filename_prefix="shapley_qpe_correct_vs_faulty"
 )
 
 print_comparison_table(
@@ -917,17 +1230,20 @@ print_comparison_table(
     shapley_vals_fault
 )
 
-
 # ============================================================
 # 16) VISUALIZACIÓN DE LA DEPENDENCIA DEL ORDEN (PERMUTACIONES)
+
 # ============================================================
 
-def visualize_order_dependence(v_values, labels, title="Dependencia del orden"):
+def visualize_order_dependence(v_values, labels, title=None):
     """
     Calcula y grafica:
     1. Contribución marginal promedio de cada jugador según su posición en la permutación (heatmap).
     2. Histograma de contribuciones marginales para cada jugador (para ver varianza).
     """
+    if title is None:
+        title = plot_text("order_dependence")
+
     n = len(labels)
     players = list(range(n))
     n_fact = factorial(n)
@@ -965,10 +1281,10 @@ def visualize_order_dependence(v_values, labels, title="Dependencia del orden"):
     axes[0].set_xticklabels(labels, rotation=45, ha='right')
     axes[0].set_yticks(np.arange(n))
     axes[0].set_yticklabels(labels)
-    axes[0].set_xlabel("Posición en la permutación (0 = primero, n-1 = último)")
-    axes[0].set_ylabel("Jugador")
-    axes[0].set_title(f"{title}\nContribución marginal promedio por posición")
-    plt.colorbar(im, ax=axes[0], label='Contribución marginal')
+    axes[0].set_xlabel(plot_text("permutation_position"))
+    axes[0].set_ylabel(plot_text("player"))
+    axes[0].set_title(f"{title}\n{plot_text('average_marginal_by_position')}")
+    plt.colorbar(im, ax=axes[0], label=plot_text("marginal_contribution"))
 
     # --- GRÁFICO 2: HISTOGRAMAS DE CONTRIBUCIONES ---
     #
@@ -976,10 +1292,10 @@ def visualize_order_dependence(v_values, labels, title="Dependencia del orden"):
         # Normalizamos el histograma para que sea densidad
         axes[1].hist(all_marginals[player], bins=30, alpha=0.5, label=labels[i], density=True)
 
-    axes[1].axvline(0, color='black', linestyle='--', linewidth=0.8, label='Contribución cero')
-    axes[1].set_xlabel("Contribución marginal")
-    axes[1].set_ylabel("Densidad de probabilidad")
-    axes[1].set_title("Distribución de contribuciones marginales por jugador")
+    axes[1].axvline(0, color='black', linestyle='--', linewidth=0.8, label=plot_text("zero_contribution"))
+    axes[1].set_xlabel(plot_text("marginal_contribution"))
+    axes[1].set_ylabel(plot_text("probability_density"))
+    axes[1].set_title(plot_text("marginal_distribution"))
     axes[1].legend(loc='upper right', fontsize=8)
     axes[1].grid(alpha=0.3)
 
@@ -991,9 +1307,9 @@ def visualize_order_dependence(v_values, labels, title="Dependencia del orden"):
     for i, player in enumerate(players):
         plt.plot(range(n), position_contrib[player, :], marker='o', label=labels[i], linewidth=2)
     plt.axhline(0, color='black', linestyle='--', linewidth=0.8)
-    plt.xlabel("Posición en la permutación")
-    plt.ylabel("Contribución marginal promedio")
-    plt.title(f"{title}\nEvolución de la contribución según la posición")
+    plt.xlabel(plot_text("permutation_position_short"))
+    plt.ylabel(plot_text("average_marginal"))
+    plt.title(f"{title}\n{plot_text('position_evolution')}")
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.grid(alpha=0.3)
     plt.tight_layout()
@@ -1001,21 +1317,21 @@ def visualize_order_dependence(v_values, labels, title="Dependencia del orden"):
 
     return position_contrib, all_marginals
 
-
 # ============================================================
 # EJECUCIÓN DE LA VISUALIZACIÓN
+
 # ============================================================
 
 # Para el caso correcto:
 pos_contrib_ok, marginals_ok = visualize_order_dependence(
     v_values,
     labels,
-    title="Caso Correcto"
+    title=plot_text("correct_case")
 )
 
 # Para el caso perturbado :
 pos_contrib_fault, marginals_fault = visualize_order_dependence(
     v_values_fault,
     labels_fault,
-    title="Caso Perturbado"
+    title=plot_text("faulty_case")
 )
