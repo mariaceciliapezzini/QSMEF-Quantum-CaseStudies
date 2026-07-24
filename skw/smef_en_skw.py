@@ -1,70 +1,7 @@
-# *-
-"""
-Marco smef aplicado en el hipercubo acuñado con moneda de Grover y operador flip-flop.
-
-SMEF-E APLICADO AL ALGORITMO SKW
-
-
- Este programa implementa una simulación del algoritmo de
- búsqueda cuántica de Shenvi-Kempe-Whaley (SKW) sobre un
- hipercubo n-dimensional utilizando una representación a
- nivel de vector de estado.
-
- La implementación no se basa en circuitos cuánticos ni en
- compuertas físicas, sino en la aplicación directa de los
- operadores funcionales del algoritmo sobre el espacio de
- Hilbert moneda–posición:
-
-     O : Oráculo
-     G : Moneda de Grover
-     S : Desplazamiento flip-flop
-
- Cada estado cuántico se representa mediante un vector de
- amplitudes complejas y la evolución del sistema se obtiene
- aplicando sucesivamente los operadores funcionales SKW.
-
- Sobre esta simulación se aplica SMEF-E
- (Software Engineering Module Evaluation Framework), considerando como componentes funcionales:
-
-     B = {O, G, S}
-
- Para cada estado del sistema se construyen configuraciones
- parciales que preservan el orden original de ejecución.
- Los componentes ausentes se reemplazan implícitamente por
- operadores identidad.
-
- A partir de dichas configuraciones se calcula:
-
-   1. Un observable funcional H_ener.
-   2. La métrica funcional M_H.
-   3. La función característica v(C).
-   4. Los valores de Shapley de cada componente.
-
- El objetivo es cuantificar la contribución funcional del
- oráculo, la moneda de Grover y el desplazamiento dentro de
- la dinámica del algoritmo SKW, así como analizar el efecto
- de anomalías introducidas en la implementación.
-
- ============================================================
-
-SKW:
-  - Bloques: O (oráculo), G (moneda de Grover), S (shift)
-   - Métrica funcional basada en H_ener
-   - Shapley calculado sobre la métrica funcional M_H
-
-Anomalía:
-   - En el caso defectuoso, el oráculo aplica una fase incorrecta exp(i*theta_bug)
-   - Se usa theta_bug = 0.70*pi para que la anomalía sea visible sin anular toda la dinámica
-"""
-
 import itertools
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-
-# ============================================================
-# IDIOMA / LANGUAGE
-# ============================================================
 
 LANG = "en"  # Usar "es" para español o "en" para inglés.
 
@@ -165,10 +102,6 @@ if LANG not in TEXT:
 TXT = TEXT[LANG]
 
 
-# ============================================================
-# 1. FUNCIONES BASE
-# ============================================================
-
 def position_dim(n):
     n = int(n)
     if n < 1:
@@ -194,9 +127,6 @@ def grover_coin_matrix(n):
     D = uniform_coin_state(n)
     return 2.0 * np.outer(D, D.conj()) - np.eye(int(n), dtype=complex)
 
-# ============================================================
-# 2. OPERADORES SKW
-# ============================================================
 
 def apply_oracle_cp(psi_cp, n, target, oracle_phase=-1.0):
     """
@@ -299,10 +229,6 @@ def apply_coalition(
 
     return out
 
-# ============================================================
-# 3. ESTADO INICIAL Y PROBABILIDAD
-# ============================================================
-
 def initial_state(n, pos0=0, uniform_pos=True):
     n = int(n)
     N = position_dim(n)
@@ -320,10 +246,6 @@ def initial_state(n, pos0=0, uniform_pos=True):
 def success_probability(psi, target, n):
     psi_cp = reshape_cp(psi, n) if np.asarray(psi).ndim == 1 else np.asarray(psi)
     return float(np.real(np.sum(np.abs(psi_cp[:, int(target)]) ** 2)))
-
-# ============================================================
-# 4. MÉTRICA FUNCIONAL H_ener
-# ============================================================
 
 def hener_expectation(psi, n, target, gamma=1.0):
     """
@@ -355,9 +277,6 @@ def hener_expectation(psi, n, target, gamma=1.0):
 
 def functional_metric(psi, n, target, gamma=1.0):
     return hener_expectation(psi, n=n, target=target, gamma=gamma)
-# ============================================================
-# 5. SHAPLEY SOBRE MÉTRICA FUNCIONAL
-# ============================================================
 
 def shapley_three_blocks_energy(
     psi_t,
@@ -419,10 +338,6 @@ def shapley_three_blocks_energy(
         "m_before": m0,
         "m_after_full": m0 + v[full],
     }
-
-# ============================================================
-# 6. SIMULACIÓN
-# ============================================================
 
 def run_and_collect(
     n=8,
@@ -494,10 +409,6 @@ def run_and_collect(
         "t_opt": int(t_opt),
     }
 
-# ============================================================
-# 7. TABLAS
-# ============================================================
-
 def print_shapley_table(res, start=15, end=23, decimals=6):
     steps = res["steps"]
     O = res["phi"]["O"]
@@ -534,10 +445,6 @@ def print_shapley_table(res, start=15, end=23, decimals=6):
     print("-" * 105)
     print(f"{TXT['max_efficiency_error']} |Σφ - ΔE| = {np.max(np.abs(error)):.3e}")
     print("=" * 105)
-
-# ============================================================
-# 8. GRÁFICOS
-# ============================================================
 
 def signed_stacked_bars(ax, x, series, labels, colors, width=0.72):
     pos_bottom = np.zeros(len(x))
@@ -892,11 +799,6 @@ def plot_comparison_lines(
     plt.show()
     plt.close(fig)
 
-
-# ============================================================
-# 9. EJECUCIÓN
-# ============================================================
-
 if __name__ == "__main__":
 
     n = 8
@@ -906,20 +808,12 @@ if __name__ == "__main__":
     order = ("O", "G", "S")
     t_opt = 19
 
-    # Oráculo: aplica una fase π al estado objetivo.
-    # Como exp(iπ) = -1, usamos directamente el valor real -1.
     phase_ok = -1.0
 
-    # Defectuoso: fase incorrecta.
-    #
-    # Para mostrar una anomalía, pero manteniendo dinámica observable,
-    # usamos una fase cercana pero distinta de pi:
-    #
+    
     #   correcto:   theta = 1.00*pi  => fase -1
     #   defectuoso: theta = 0.70*pi  => fase incorrecta
-    #
-    # Con este valor el oráculo conserva efecto, pero su perfil de contribución
-    # cambia en la ventana alrededor de t_opt.
+     
     theta_bug = 0.70 * np.pi
     phase_bug = np.exp(1j * theta_bug)
 
