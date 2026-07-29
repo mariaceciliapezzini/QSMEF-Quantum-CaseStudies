@@ -12,7 +12,7 @@ The implementations were developed for methodological evaluation purposes. Each 
 
 Functional model based on the Shenvi–Kempe–Whaley (SKW) quantum search algorithm on the hypercube.
 
-The implementation explicitly represents the functional operators considered by SMEF:
+The implementation explicitly represents the functional operators considered by QSMEF:
 
 - Oracle
 - Grover coin
@@ -22,7 +22,7 @@ The implementation explicitly represents the functional operators considered by 
 
 Functional model based on the Quantum Phase Estimation (QPE) subroutine used in Shor's algorithm.
 
-The functional components considered by SMEF are:
+The functional components considered by QSMEF are:
 
 - **B0:** Initial state preparation.
 - **B1:** Superposition generation using Hadamard gates.
