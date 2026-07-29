@@ -1,10 +1,10 @@
-# SMEF
+# QSMEF
 
-SMEF (*Software Engineering Module Evaluation Framework*) is a methodological framework for the functional analysis of quantum software implementations.
+QSMEF (*Quantum Software Engineering Module Evaluation Framework*) is a methodological framework for the functional analysis of quantum software implementations.
 
-This repository contains the experimental implementations used to evaluate SMEF through case studies based on the Shenvi–Kempe–Whaley (SKW) quantum search algorithm and the Quantum Phase Estimation (QPE) subroutine of Shor's algorithm.
+This repository contains the experimental implementations used to evaluate QSMEF through case studies based on the Shenvi–Kempe–Whaley (SKW) quantum search algorithm and the Quantum Phase Estimation (QPE) subroutine of Shor's algorithm.
 
-The implementations were developed for methodological evaluation purposes. Each case study explicitly models the functional components required by SMEF to analyze their contribution to the overall behavior of the implementation using Hermitian observables and Shapley values.
+The implementations were developed for methodological evaluation purposes. Each case study explicitly models the functional components required by QSMEF to analyze their contribution to the overall behavior of the implementation using Hermitian observables and Shapley values.
 
 ## Case Studies
 
@@ -32,7 +32,7 @@ The inverse Quantum Fourier Transform (QFT) and the measurement stage are used e
 
 ## Objective
 
-The objective of these implementations is to provide reproducible case studies for evaluating SMEF by enabling:
+The objective of these implementations is to provide reproducible case studies for evaluating QSMEF by enabling:
 
 - construction of partial configurations;
 - computation of characteristic functions;
