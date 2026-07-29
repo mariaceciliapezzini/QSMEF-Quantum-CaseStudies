@@ -1,6 +1,6 @@
-# SMEF Case Study: SKW Quantum Search Algorithm
+# QSMEF Case Study: SKW Quantum Search Algorithm
 
-This repository contains the implementation of the Shenvi–Kempe–Whaley (SKW) quantum search algorithm used as a case study for the Software Engineering Module Evaluation Framework (SMEF).
+This repository contains the implementation of the Shenvi–Kempe–Whaley (SKW) quantum search algorithm used as a case study for the Quantum Software Engineering Module Evaluation Framework (QSMEF).
 
 The program implements a simulation of the SKW quantum search algorithm on an *n*-dimensional hypercube using a state-vector representation.
 
@@ -14,9 +14,9 @@ The functional operators are:
 
 Each quantum state is represented as a vector of complex amplitudes, and the system evolves through the successive application of the SKW functional operators.
 
-## SMEF Evaluation
+## QSMEF Evaluation
 
-SMEF (*Software Engineering Module Evaluation Framework*) is applied to the implementation by considering the following functional components:
+QSMEF (*Quantum Software Engineering Module Evaluation Framework*) is applied to the implementation by considering the following functional components:
 
 \[
 B=\{O,G,S\}
