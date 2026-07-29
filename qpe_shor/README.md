@@ -1,6 +1,6 @@
-# SMEF Case Study: Quantum Phase Estimation (QPE) in Shor's Algorithm
+# QSMEF Case Study: Quantum Phase Estimation (QPE) in Shor's Algorithm
 
-This repository contains the implementation of the Quantum Phase Estimation (QPE) case study used in Shor's algorithm for evaluating the Software Engineering Module Evaluation Framework (SMEF).
+This repository contains the implementation of the Quantum Phase Estimation (QPE) case study used in Shor's algorithm for evaluating the Quantum Software Engineering Module Evaluation Framework (QSMEF).
 
 ## Objective
 
@@ -22,7 +22,7 @@ SMEF decomposes the implementation into the following functional components:
 
 The inverse Quantum Fourier Transform (QFT†) followed by measurement constitutes the readout stage. This stage is used exclusively to obtain the measurement outcomes and is therefore not included among the functional components evaluated through Shapley values.
 
-## SMEF Evaluation
+## QSMEF Evaluation
 
 For each coalition of functional components:
 
@@ -34,4 +34,4 @@ For each coalition of functional components:
 
 ## Anomaly Detection
 
-The implementation supports the introduction of controlled perturbations into the phase blocks. These perturbations enable the analysis of how anomalies modify the functional contributions of the individual components identified by SMEF.
+The implementation supports the introduction of controlled perturbations into the phase blocks. These perturbations enable the analysis of how anomalies modify the functional contributions of the individual components identified by QSMEF.
