@@ -58,4 +58,4 @@ The required packages are:
 
 ## Associated Publication
 
-**SMEF: A Methodological Framework for the Functional Analysis of Quantum Software Implementations.**
+**QSMEF: A Methodological Framework for the Functional Analysis of Quantum Software Implementations.**
