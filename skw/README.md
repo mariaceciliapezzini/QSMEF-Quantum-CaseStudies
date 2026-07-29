@@ -22,9 +22,9 @@ QSMEF (*Quantum Software Engineering Module Evaluation Framework*) is applied to
 B=\{O,G,S\}
 \]
 
-For each system state, SMEF constructs partial configurations that preserve the original execution order. Missing components are implicitly replaced by identity operators.
+For each system state, QSMEF constructs partial configurations that preserve the original execution order. Missing components are implicitly replaced by identity operators.
 
-From these configurations, SMEF computes:
+From these configurations, QSMEF computes:
 
 1. the Hermitian observable \(H_{ener}\);
 2. the functional metric \(M_H\);
