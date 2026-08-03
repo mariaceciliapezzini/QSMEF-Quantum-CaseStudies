@@ -14,7 +14,7 @@ The implementation constructs the quantum phase estimation circuit used to estim
 f(x)=a^x \bmod N.
 \]
 
-SMEF decomposes the implementation into the following functional components:
+QSMEF decomposes the implementation into the following functional components:
 
 - **B0:** Work-register initialization.
 - **B1:** Uniform superposition generation using Hadamard gates.
@@ -31,6 +31,10 @@ For each coalition of functional components:
 - a functional metric based on a Hermitian periodicity observable is computed;
 - the characteristic function \(v(C)\) is constructed;
 - the Shapley value of each functional component is calculated.
+
+## Supplementary Material
+
+The complete description of this case study, including the implementation modeling, functional decomposition, observable definition, experimental results, and comparative analysis, is available in **QPE_Supplementary.pdf**.
 
 ## Anomaly Detection
 
