@@ -23,40 +23,45 @@ contributions.
 
 ## QPE Implementation
 
-The implementation constructs the quantum phase estimation circuit used
+The implementation represents the quantum phase estimation process used
 in the order-finding stage of Shor's algorithm.
 
-The analyzed implementation contains operations associated with:
+The exploratory decomposition considered the following attributable
+components:
 
 - work-register initialization;
 - uniform superposition generation using Hadamard gates;
 - controlled applications of the modular multiplication operators
-  \(U^{2^k}\);
-- inverse Quantum Fourier Transform (QFT†);
-- measurement of the counting register.
+  \(U^{2^k}\).
 
-These operations are structurally identifiable in the implementation.
-However, structural identification alone is not sufficient to define
-valid QSMEF functional components.
+The inverse Quantum Fourier Transform (QFT†) was kept outside the set of
+attributable components and applied as a fixed readout operation to every
+coalition. The experiment did not perform an explicit measurement
+operation; instead, it obtained the relevant probabilities directly from
+the resulting statevector.
+
+These operations define structurally identifiable stages of the
+implementation. However, structural identification alone is not
+sufficient to define valid QSMEF functional components.
 
 ## Applicability Analysis
 
 QSMEF evaluates coalitions by neutralizing absent components while
-preserving the operational context required to compare the resulting
-configurations.
+preserving the operational order of the components that remain.
 
 For a decomposition to support a valid QSMEF analysis, the induced
 coalitions must remain functionally comparable with respect to the
 property represented by the selected observable.
 
-In the QPE implementation considered here, neutralizing operations
-involved in state preparation, controlled modular evolution, or phase
-readout changes the functional conditions under which the phase
-information is generated and interpreted.
+In the QPE implementation considered here, neutralizing components
+involved in state preparation, superposition generation, or controlled
+modular evolution changes the functional conditions under which phase
+information is generated. The fixed QFT† readout therefore acts on states
+produced under different functional contexts across coalitions.
 
 As a consequence, the resulting coalition configurations cannot, in
-general, be interpreted as partial realizations of the same functional
-process with a common semantic meaning.
+general, be interpreted as functionally comparable partial realizations
+of the same phase-estimation process.
 
 Therefore, the original decomposition used for the QPE experiment does
 not satisfy the applicability conditions required by QSMEF.
@@ -72,8 +77,14 @@ The observable must also:
 - preserve the same functional interpretation across all coalitions.
 
 For the QPE decomposition considered here, the neutralization of
-functionally interdependent stages prevents guaranteeing this common
+functionally interdependent components prevents guaranteeing this common
 semantic interpretation across coalitions.
+
+Although the same QFT† readout and the same observable are applied to
+every coalition, the states entering the readout arise from different
+functional contexts. The resulting expectation values therefore remain
+mathematically well defined but do not necessarily represent the same
+functional property under comparable computational conditions.
 
 ## Methodological Conclusion
 
@@ -93,9 +104,9 @@ the valid QSMEF application case included in this repository.
 ## Supplementary Material
 
 The supplementary material associated with this analysis documents the
-QPE implementation and the methodological issues identified during the
-applicability assessment.
+QPE implementation, the exploratory numerical results, and the
+methodological issues identified during the applicability assessment.
 
-Any previously reported QPE coalition results or Shapley values should
-be interpreted only as outputs of the exploratory implementation and not
-as valid functional-attribution results of QSMEF.
+Any QPE coalition results or Shapley values reported in this directory
+should be interpreted only as outputs of the exploratory cooperative game
+and not as validated QSMEF functional-attribution results.
