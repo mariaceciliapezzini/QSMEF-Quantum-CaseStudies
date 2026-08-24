@@ -419,7 +419,7 @@ def smefe_shor_phase_blocks_shapley(
                 f"{faulty_mode}"
             )
 
-              if faulty_mode == "wrong_unitary":
+            if faulty_mode == "wrong_unitary":
                 print(
                     f"[FAULT] Unidad incorrecta: "
                     f"a_fault = {faulty_a}"
