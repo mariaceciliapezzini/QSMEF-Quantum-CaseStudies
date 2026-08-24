@@ -1,3 +1,24 @@
+"""
+Exploratory QPE/Shor cooperative-game analysis.
+
+This script reproduces the coalition construction and numerical Shapley
+values originally explored for the Quantum Phase Estimation (QPE) stage
+of Shor's algorithm.
+
+Subsequent methodological analysis showed that the decomposition used
+here does not guarantee functional comparability across coalitions or
+semantic invariance of the selected observable.
+
+Therefore, the numerical Shapley values produced by this script must be
+interpreted as results of an exploratory cooperative-game construction,
+not as validated QSMEF functional contributions.
+
+The script is retained for reproducibility and for documenting the
+applicability analysis of QSMEF.
+"""
+
+
+
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.circuit.library import QFTGate
 from qiskit.circuit import Gate
@@ -122,14 +143,13 @@ PLOT_TEXTS = {
         "controlled_phase": "Fase controlada",
         "correct": "Correcta",
         "faulty": "Perturbada",
-        "comparison_title": "Comparación de valores de Shapley: correcta vs. perturbada",
-        "shapley_correct_title": "SMEF Shapley completo Shor-QPE",
-        "shapley_faulty_title": "SMEF Shapley completo Shor-QPE perturbado",
-        "fault": "anomalía",
-        "mode": "modo",
-        "order_dependence": "Dependencia del orden",
-        "correct_case": "Caso correcto",
-        "faulty_case": "Caso perturbado",
+        "comparison_title": "Comparación exploratoria de valores de Shapley: referencia vs. modificada",
+        "shapley_correct_title": "Análisis exploratorio de Shapley para Shor-QPE",
+        "shapley_faulty_title": "Análisis exploratorio de Shapley para Shor-QPE modificado",
+         "correct": "Referencia",
+         "faulty": "Modificada",
+         "correct_case": "Configuración de referencia",
+         "faulty_case": "Configuración modificada",
         "permutation_position": "Posición en la permutación (0 = primero, n-1 = último)",
         "player": "Componente",
         "average_marginal_by_position": "Contribución marginal promedio por posición",
@@ -148,14 +168,13 @@ PLOT_TEXTS = {
         "controlled_phase": "Controlled phase",
         "correct": "Correct",
         "faulty": "Perturbed",
-        "comparison_title": "Comparison of Shapley values: correct vs. perturbed implementation",
-        "shapley_correct_title": "Complete SMEF Shapley analysis for Shor-QPE",
-        "shapley_faulty_title": "Complete SMEF Shapley analysis for perturbed Shor-QPE",
-        "fault": "fault",
-        "mode": "mode",
-        "order_dependence": "Order dependence",
-        "correct_case": "Correct case",
-        "faulty_case": "Perturbed case",
+        "comparison_title": "Exploratory comparison of Shapley values: reference vs. modified configuration",
+        "shapley_correct_title": "Exploratory Shapley analysis for Shor-QPE",
+        "shapley_faulty_title": "Exploratory Shapley analysis for modified Shor-QPE",
+         "correct": "Reference",
+        "faulty": "Modified",
+        "correct_case": "Reference configuration",
+         "faulty_case": "Modified configuration",
         "permutation_position": "Position in the permutation (0 = first, n-1 = last)",
         "player": "Component",
         "average_marginal_by_position": "Average marginal contribution by position",
@@ -350,7 +369,7 @@ def smefe_shor_phase_blocks_shapley(
     faulty_phase_block=None,
     faulty_mode=None,
     faulty_a=None,
-    plot_title_prefix: str = "SMEF Shapley completo Shor-QPE"
+    plot_title_prefix: str = "Exploratory Shapley analysis for Shor-QPE"
 ):
     r = multiplicative_order(a, N)
 
@@ -385,9 +404,14 @@ def smefe_shor_phase_blocks_shapley(
     n_players = len(blocks_all)
     n_total = precision + work.size
 
-    if verbose:
-        print(f"Jugadores: {labels}")
-        print(f"n_players = {n_players}")
+   if verbose:
+    print(
+        "\n[NOTE] Exploratory QPE coalition construction. "
+        "The resulting Shapley values are not interpreted as "
+        "validated QSMEF functional contributions."
+    )
+    print(f"Jugadores: {labels}")
+    print(f"n_players = {n_players}")
 
         if faulty_phase_block is not None:
             print(
@@ -918,7 +942,7 @@ def print_comparison_table(
     total_diff = total_faulty - total_ok
 
     print("\n" + "=" * 80)
-    print("Comparación bloque por bloque: correcta vs perturbada")
+    print("Comparación bloque por bloque: referencia vs modificada")
     print("=" * 80)
 
     print(
@@ -1033,7 +1057,7 @@ print_numeric_summary(
     E_empty,
     E_full,
     v_values,
-    title="Implementación correcta"
+    title="Configuración de referencia"
 )
 
 labels_fault, shapley_vals_fault, v_values_fault, E_values_fault, good_m_fault, r_fault, eps_fault, E_empty_fault, E_full_fault = (
@@ -1104,7 +1128,7 @@ print_numeric_summary(
     E_empty_fault,
     E_full_fault,
     v_values_fault,
-    title="Implementación perturbada"
+    title="Configuración modificada"
 )
 
 compare_shapley_correct_vs_faulty(
