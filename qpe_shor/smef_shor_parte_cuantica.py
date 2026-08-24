@@ -404,12 +404,12 @@ def smefe_shor_phase_blocks_shapley(
     n_players = len(blocks_all)
     n_total = precision + work.size
 
-       if verbose:
-           print(
-           "\n[NOTE] Exploratory QPE coalition construction. "
+    if verbose:
+        print(
+            "\n[NOTE] Exploratory QPE coalition construction. "
             "The resulting Shapley values are not interpreted as "
-             "validated QSMEF functional contributions."
-             )
+            "validated QSMEF functional contributions."
+        )
         print(f"Jugadores: {labels}")
         print(f"n_players = {n_players}")
 
@@ -423,6 +423,11 @@ def smefe_shor_phase_blocks_shapley(
                 f"{faulty_mode}"
             )
 
+            if faulty_mode == "wrong_unitary":
+                print(
+                    f"[FAULT] Unidad incorrecta: "
+                    f"a_fault = {faulty_a}"
+                )
             if faulty_mode == "wrong_unitary":
                 print(
                     f"[FAULT] Unidad incorrecta: "
