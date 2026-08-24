@@ -32,15 +32,18 @@ functional contribution of the selected components.
 
 ## QPE Applicability Analysis
 
-The QPE experiment initially explored the following functional decomposition:
+The QPE experiment initially explored the following decomposition:
 
 - **B0:** Initial state preparation.
 - **B1:** Superposition generation using Hadamard gates.
 - **B2,k:** Controlled applications of the operator \(U^{2^k}\).
 
 The experiment evaluated the cooperative game defined by these components.
-It did not include the inverse Quantum Fourier Transform (QFT) or the
-measurement stage in the evaluated decomposition.
+The inverse Quantum Fourier Transform (QFT†) remained outside the set of
+attributable components and was applied as a fixed readout operation to every
+coalition. The experiment did not perform an explicit measurement operation;
+instead, it obtained the relevant probabilities directly from the resulting
+statevector.
 
 Further methodological analysis showed that this decomposition does not
 preserve functional comparability across all coalitions. In QPE, the
