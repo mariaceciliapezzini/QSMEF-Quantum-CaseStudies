@@ -137,19 +137,19 @@ LANGUAGE = "en"
 
 PLOT_TEXTS = {
     "es": {
-        "shapley_value": "Valor de Shapley",
-        "initial_preparation": "Preparación inicial",
-        "superposition": "Superposición",
-        "controlled_phase": "Fase controlada",
-        "correct": "Correcta",
-        "faulty": "Perturbada",
-        "comparison_title": "Comparación exploratoria de valores de Shapley: referencia vs. modificada",
-        "shapley_correct_title": "Análisis exploratorio de Shapley para Shor-QPE",
-        "shapley_faulty_title": "Análisis exploratorio de Shapley para Shor-QPE modificado",
-         "correct": "Referencia",
-         "faulty": "Modificada",
-         "correct_case": "Configuración de referencia",
-         "faulty_case": "Configuración modificada",
+       "shapley_value": "Valor de Shapley",
+       "initial_preparation": "Preparación inicial",
+       "superposition": "Superposición",
+       "controlled_phase": "Fase controlada",
+       "correct": "Correcta",
+       "faulty": "Perturbada",
+       "comparison_title": "Comparación exploratoria de valores de Shapley: referencia vs. modificada",
+       "shapley_correct_title": "Análisis exploratorio de Shapley para Shor-QPE",
+       "shapley_faulty_title": "Análisis exploratorio de Shapley para Shor-QPE modificado",
+        "correct": "Referencia",
+        "faulty": "Modificada",
+        "correct_case": "Configuración de referencia",
+        "faulty_case": "Configuración modificada",
         "permutation_position": "Posición en la permutación (0 = primero, n-1 = último)",
         "player": "Componente",
         "average_marginal_by_position": "Contribución marginal promedio por posición",
@@ -404,14 +404,14 @@ def smefe_shor_phase_blocks_shapley(
     n_players = len(blocks_all)
     n_total = precision + work.size
 
-   if verbose:
-    print(
-        "\n[NOTE] Exploratory QPE coalition construction. "
-        "The resulting Shapley values are not interpreted as "
-        "validated QSMEF functional contributions."
-    )
-    print(f"Jugadores: {labels}")
-    print(f"n_players = {n_players}")
+       if verbose:
+           print(
+           "\n[NOTE] Exploratory QPE coalition construction. "
+            "The resulting Shapley values are not interpreted as "
+             "validated QSMEF functional contributions."
+             )
+        print(f"Jugadores: {labels}")
+        print(f"n_players = {n_players}")
 
         if faulty_phase_block is not None:
             print(
