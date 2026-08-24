@@ -1,12 +1,12 @@
 # QSMEF
 
 QSMEF (*Quantum Software Engineering Module Evaluation Framework*) is a
-methodological framework for the functional analysis of quantum software
-implementations.
+methodological framework for analyzing the functional contribution of
+components in quantum software implementations.
 
 This repository contains the experimental material associated with the
 evaluation and applicability analysis of QSMEF. It includes two quantum
-implementations with different methodological roles:
+implementations that serve different methodological purposes:
 
 - the Shenvi–Kempe–Whaley (SKW) quantum search on the hypercube, used as
   a QSMEF application case;
@@ -16,7 +16,7 @@ implementations with different methodological roles:
 
 ## SKW Application Case
 
-The SKW implementation models three functional components:
+The SKW implementation defines three functional components:
 
 - Oracle
 - Grover coin
@@ -25,40 +25,44 @@ The SKW implementation models three functional components:
 QSMEF constructs partial configurations by neutralizing absent components
 while preserving the operational order of the components that remain.
 
-The selected decomposition and Hermitian observable support functional
-comparison across coalitions. The resulting characteristic function and
-Shapley values therefore provide the functional-attribution analysis
-reported for this case.
+In this case, the selected functional decomposition and Hermitian observable
+preserve functional comparability across coalitions. QSMEF can therefore use
+the resulting characteristic function and Shapley values to analyze the
+functional contribution of the selected components.
 
 ## QPE Applicability Analysis
 
-The QPE experiment initially explored the following decomposition:
+The QPE experiment initially explored the following functional decomposition:
 
 - **B0:** Initial state preparation.
 - **B1:** Superposition generation using Hadamard gates.
 - **B2,k:** Controlled applications of the operator \(U^{2^k}\).
 
-The initial construction also used the inverse Quantum Fourier Transform
-(QFT) and measurement as part of the readout context.
+The experiment evaluated the cooperative game defined by these components.
+It did not include the inverse Quantum Fourier Transform (QFT) or the
+measurement stage in the evaluated decomposition.
 
-Subsequent methodological analysis showed that this decomposition does
-not preserve functional comparability across all coalitions. Neutralizing
-some QPE stages changes the computational context and the functional role
-of the remaining operations.
+Further methodological analysis showed that this decomposition does not
+preserve functional comparability across all coalitions. In QPE, the
+functional role of each stage depends on the computational context established
+by the other stages. Neutralizing some components therefore changes the
+conditions under which the remaining operations perform their intended
+function.
 
-For this reason, the QPE experiment does not constitute a QSMEF
-validation case. The repository retains its implementation and numerical
-Shapley results for reproducibility and to document the applicability
-analysis. These values describe the exploratory cooperative game and
-should not be interpreted as validated QSMEF functional contributions.
+For this reason, the QPE experiment does not constitute a valid QSMEF
+application case. The repository retains the implementation and its numerical
+Shapley results for reproducibility and to document the applicability analysis.
+These values characterize the exploratory cooperative game defined for the
+experiment, but they should not be interpreted as validated QSMEF functional
+contributions.
 
-The file `qpe_shor/QPE_Supplementary.pdf` provides the complete
-applicability analysis.
+The file `qpe_shor/QPE_Supplementary.pdf` provides the complete applicability
+analysis.
 
 ## Applicability Considerations
 
-The QPE analysis highlights that a QSMEF evaluation requires more than
-a structural circuit decomposition and a Hermitian observable.
+The QPE analysis shows that a QSMEF evaluation requires more than identifying
+functional blocks and defining a Hermitian observable.
 
 The analysis must ensure that:
 
@@ -68,20 +72,20 @@ The analysis must ensure that:
 - the selected observable retains the same functional meaning across
   those coalitions.
 
-These conditions determine whether QSMEF can interpret the resulting
-Shapley values as functional contributions.
+These conditions determine whether QSMEF can interpret the resulting Shapley
+values as functional contributions.
 
 ## Reproducibility
 
 The repository preserves the implementations and numerical experiments
 associated with both analyses.
 
-The QPE code remains available to reproduce the exploratory cooperative
-game and the numerical results documented in the supplementary material.
+The QPE code remains available to reproduce the exploratory cooperative game
+and the numerical results documented in the supplementary material.
 
 ## Requirements
 
-The implementations were developed in Python 3.10 or later.
+The implementations require Python 3.10 or later.
 
 Install the required dependencies using:
 
